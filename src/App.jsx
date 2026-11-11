@@ -17,10 +17,49 @@ const timeline = [
 ];
 
 const benefits = [
-  { title: "Ida e volta no mesmo turno", text: "O transporte acompanha a escala, inclusive de madrugada." },
-  { title: "Pontos Nexus acessíveis", text: "Embarque em locais definidos, com necessidades de acessibilidade já previstas." },
-  { title: "Rotas consolidadas", text: "O RH agrupa quem tem turno compatível e o motorista recebe a rota pronta." },
+  { title: "Volta para casa na madrugada", text: "Rotas compartilhadas saem do centro de distribuição ao fim do turno, quando a cobertura tradicional nem sempre chega." },
+  { title: "Pontos Nexus no bairro", text: "O trabalhador desce em um ponto a cerca de 2 km de casa, e cada grupo é formado por proximidade." },
+  { title: "Complementa o fretado", text: "Cobre os horários e as regiões que o fretado não alcança, sem substituir o que já funciona." },
 ];
+
+const gaps = [
+  { title: "Cobertura que não alcança", text: "Na madrugada, o fretado nem sempre chega às regiões onde o trabalhador mora." },
+  { title: "Veículo com assento vazio", text: "Com menos gente no horário, o custo por passageiro sobe e o veículo roda subutilizado." },
+  { title: "Polos distantes e periferia", text: "Muitos centros ficam longe dos bairros onde o trabalhador mora, em regiões de periferia." },
+];
+
+const impacts = [
+  "Vagas abertas nos centros de distribuição",
+  "Evasão nos turnos da noite",
+  "Menos qualidade de vida para quem trabalha",
+];
+
+const howSteps = [
+  { title: "Fim do turno", text: "O trabalhador embarca no centro de distribuição, às 03h00." },
+  { title: "Rota compartilhada", text: "Quem mora na mesma região viaja junto, em grupos formados por proximidade." },
+  { title: "Ponto Nexus", text: "Desce no ponto do bairro, a cerca de 2 km de casa." },
+];
+
+const valueCols = [
+  { title: "RH", text: "Menos vagas abertas e menos evasão nos turnos da noite." },
+  { title: "Trabalhador", text: "Volta segura para casa, mais acesso ao trabalho e mais qualidade de vida." },
+  { title: "Operação", text: "Melhor custo-benefício e mais eficiência, com ocupação planejada." },
+];
+
+const compare = [
+  { k: "Rota", a: "Fixa, definida de antemão", b: "Compartilhada, planejada por turno" },
+  { k: "Madrugada", a: "Cobertura nem sempre disponível", b: "Foco na volta do fim do turno" },
+  { k: "Ocupação", a: "Pode rodar com assentos vazios", b: "Grupos formados por proximidade" },
+  { k: "Destino", a: "Depende do trajeto do fretado", b: "Ponto Nexus a cerca de 2 km de casa" },
+];
+
+const future = [
+  { title: "Hoje", text: "Carros com motoristas, em rotas compartilhadas." },
+  { title: "Próximo passo", text: "Vans para grupos maiores, ajustando o veículo à demanda." },
+  { title: "Longo prazo", text: "Veículos maiores e mais polos logísticos." },
+];
+
+const houses = [[60, 70], [160, 58], [172, 140], [92, 168], [48, 130], [136, 92]];
 
 // Sempre 3 pontos por polo (o mapa SVG posiciona 3 colunas).
 const polos = [
@@ -32,7 +71,7 @@ const polos = [
 const kpis = [
   { value: 92, label: "Pontualidade", text: "Chegadas dentro do horário do turno." },
   { value: 84, label: "Ocupação", text: "Assentos usados por veículo." },
-  { value: 96, label: "Acessibilidade", text: "Necessidades atendidas no embarque." },
+  { value: 96, label: "Acessibilidade", text: "Necessidades de acessibilidade atendidas." },
 ];
 
 const routeSteps = [
@@ -53,8 +92,8 @@ const profiles = [
     id: "funcionario",
     title: "Funcionário",
     Icon: User,
-    description: "Consulta embarque, visualiza ponto Nexus, acessibilidade e confirma presença.",
-    actions: ["Vê o turno", "Encontra o ponto de embarque", "Confirma embarque"],
+    description: "Consulta o horário da volta, vê o Ponto Nexus do bairro, informa acessibilidade e confirma presença.",
+    actions: ["Vê o horário da volta", "Encontra o Ponto Nexus", "Confirma presença"],
   },
   {
     id: "motorista",
@@ -126,7 +165,7 @@ function App() {
 
             <p className="hero-description">
               O 99 Nexus é uma extensão do 99 Corporativo criada para ampliar o acesso ao
-              trabalho em operações que funcionam 24 horas por dia.
+              trabalho em operações que funcionam 24 horas por dia. Foco na volta para casa de quem encerra o turno na madrugada.
             </p>
 
             <div className="hero-actions">
@@ -145,7 +184,7 @@ function App() {
               <img src={heroWorker} alt="Trabalhador de operação logística no fim do turno" />
               <div className="hero-chip" aria-hidden="true">
                 <strong>03h10</strong>
-                <span> Proximo Nexus sai do ponto de embarque</span>
+                <span>Nexus sai do centro de distribuição rumo ao seu bairro</span>
               </div>
             </div>
           </div>
@@ -159,6 +198,11 @@ function App() {
               O turno termina quando o transporte já não está disponível.
             </h2>
 
+            <p className="lead">
+              A ida acontece em horário comum, com transporte público ou fretado. O problema é a
+              volta, quando o turno acaba na madrugada.
+            </p>
+
             <ol className="timeline">
               {timeline.map((t) => (
                 <li key={t.time} className={t.gap ? "tl-gap" : ""}>
@@ -171,20 +215,46 @@ function App() {
             <p className="problem-closing">
               Quando a volta não existe, o emprego também fica fora do alcance.
             </p>
+
+            <div className="gap-block">
+              <h3 className="h3">Mas a empresa já não tem fretado?</h3>
+              <p className="lead">
+                Tem, e o Nexus não quer substituí-lo. Mas na madrugada a demanda costuma ser menor
+                e a cobertura tradicional muitas vezes não alcança determinadas regiões.
+              </p>
+
+              <div className="gap-grid">
+                {gaps.map((g) => (
+                  <article key={g.title} className="gap-card">
+                    <h4>{g.title}</h4>
+                    <p>{g.text}</p>
+                  </article>
+                ))}
+              </div>
+
+              <div className="impact">
+                <p className="impact-title">O efeito na operação</p>
+                <ul>
+                  {impacts.map((i) => (
+                    <li key={i}>{i}</li>
+                  ))}
+                </ul>
+              </div>
+            </div>
           </div>
         </section>
 
         {/* SOLUÇÃO */}
         <section id="solucao" className="section theme-light" aria-labelledby="solucao-title">
-          <div className="container solution-grid">
+          <div className="container">
+            <div className="solution-grid">
             <div>
               <p className="eyebrow">A solução</p>
               <h2 id="solucao-title" className="h2">
                 Mobilidade planejada. Operação conectada.
               </h2>
               <p className="lead">
-                O 99 Nexus conecta trabalhadores, RH e motoristas por meio de rotas planejadas
-                para cada turno.
+                O 99 Nexus é uma solução de mobilidade corporativa para trabalhadores de turno. Ele complementa modelos já existentes, como o fretado, e amplia o acesso ao trabalho em horários e regiões onde a mobilidade ainda é um desafio.
               </p>
 
               <ul className="benefits">
@@ -202,16 +272,89 @@ function App() {
 
             <figure className="phone-figure">
               <div className="phone" aria-hidden="true">
-                <p className="phone-title">Seu turno hoje</p>
+                <p className="phone-title">Sua volta hoje</p>
                 <dl>
-                  <div><dt>Turno</dt><dd>19h00 – 03h00</dd></div>
-                  <div><dt>Embarque</dt><dd>Ponto Nexus</dd></div>
+                  <div><dt>Saída do turno</dt><dd>03h00</dd></div>
+                  <div><dt>Desembarque</dt><dd>Ponto Nexus</dd></div>
                   <div><dt>Acessibilidade</dt><dd>Prevista</dd></div>
                 </dl>
-                <span className="phone-btn">Confirmar embarque</span>
+                <span className="phone-btn">Confirmar volta</span>
               </div>
               <figcaption>Exemplo ilustrativo da tela do funcionário.</figcaption>
             </figure>
+            </div>
+
+            <div className="how">
+              <figure className="radius-figure">
+                <svg
+                  viewBox="0 0 220 220"
+                  role="img"
+                  aria-label="Um Ponto Nexus no centro e casas ao redor, dentro de um raio de cerca de 2 quilômetros"
+                >
+                  <circle className="radius-ring" cx="110" cy="110" r="96" />
+                  {houses.map(([x, y]) => (
+                    <circle key={`${x}-${y}`} className="radius-house" cx={x} cy={y} r="6" />
+                  ))}
+                  <circle className="radius-core" cx="110" cy="110" r="16" />
+                  <text className="radius-n" x="110" y="116" textAnchor="middle">N</text>
+                </svg>
+                <figcaption>Raio de cerca de 2 km ao redor do Ponto Nexus (ilustrativo).</figcaption>
+              </figure>
+
+              <div>
+                <h3 className="h3">Como funciona a volta</h3>
+                <ol className="how-steps">
+                  {howSteps.map((h) => (
+                    <li key={h.title}>
+                      <strong>{h.title}</strong>
+                      <p>{h.text}</p>
+                    </li>
+                  ))}
+                </ol>
+              </div>
+            </div>
+
+            <div className="values">
+              {valueCols.map((v) => (
+                <article key={v.title} className="value-card">
+                  <h3>{v.title}</h3>
+                  <p>{v.text}</p>
+                </article>
+              ))}
+            </div>
+
+            <table className="compare">
+              <caption>Comparação conceitual. Cada operação tem suas particularidades.</caption>
+              <thead>
+                <tr>
+                  <th scope="col">Critério</th>
+                  <th scope="col">Fretado tradicional</th>
+                  <th scope="col">99 Nexus</th>
+                </tr>
+              </thead>
+              <tbody>
+                {compare.map((r) => (
+                  <tr key={r.k}>
+                    <th scope="row">{r.k}</th>
+                    <td>{r.a}</td>
+                    <td>{r.b}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+
+            <div className="future">
+              <p className="eyebrow">Visão de futuro</p>
+              <h3 className="h3">Uma ideia para crescer</h3>
+              <ol className="future-steps">
+                {future.map((f) => (
+                  <li key={f.title}>
+                    <strong>{f.title}</strong>
+                    <p>{f.text}</p>
+                  </li>
+                ))}
+              </ol>
+            </div>
           </div>
         </section>
 
@@ -222,6 +365,11 @@ function App() {
             <h2 id="mapa-title" className="h2">
               Conectando trabalhadores aos principais polos logísticos da Grande São Paulo.
             </h2>
+
+            <p className="lead">
+              Polos distantes e bairros de periferia entram no mapa. A rota sai do centro de
+              distribuição e deixa o trabalhador no Ponto Nexus do seu bairro.
+            </p>
 
             <NexusMap polos={polos} />
 
@@ -343,23 +491,23 @@ function App() {
 
               <p className="founder-text">
                 O 99 Nexus nasceu durante um hackathon da 99 realizado em parceria com a DiverseMatch Tech, onde participei do Grupo 3 desenvolvendo uma proposta de mobilidade corporativa para profissionais que atuam em diferentes jornadas e turnos.
-
-Após o evento, decidi revisitar o projeto e transformá-lo neste MVP, ampliando a visão inicial para explorar como mobilidade, tecnologia e planejamento podem gerar mais acesso ao trabalho, qualidade de vida e eficiência operacional. O nome Nexus foi escolhido por representar exatamente essa ideia de conexão: entre pessoas, oportunidades, operações e tecnologia.
+              </p>
+              <p className="founder-text">
+                Após o evento, decidi revisitar o projeto e transformá-lo neste MVP, ampliando a visão inicial para explorar como mobilidade, tecnologia e planejamento podem gerar mais acesso ao trabalho, qualidade de vida e eficiência operacional. O nome Nexus foi escolhido por representar exatamente essa ideia de conexão: entre pessoas, oportunidades, operações e tecnologia.
               </p>
               <p className="founder-text">
                 Minha trajetória profissional foi construída em ambientes de atendimento, operações e negócios, desenvolvendo uma visão voltada para transformação digital, melhoria contínua e gestão de projetos. Mais do que a execução técnica, meu foco está em conectar pessoas, processos e tecnologia, traduzindo necessidades de negócio em soluções práticas, compreensíveis e orientadas a resultado.
-
-Sou formada em Administração, possuo formação técnica Full Stack pelo SENAI e atualmente concluo o bootcamp de Cloud Computing da Generation Brasil, com foco na certificação AWS Certified Cloud Practitioner. Acredito no aprendizado contínuo e no uso estratégico das novas tecnologias para gerar valor, eficiência, qualidade e melhor custo-benefício para pessoas e organizações.
               </p>
               <p className="founder-text">
-Nesta versão do 99 Nexus, atuei na definição da visão de produto, experiência do usuário, estrutura funcional e evolução do MVP, utilizando metodologias ágeis e ferramentas de Inteligência Artificial, incluindo o Microsoft Copilot, para acelerar prototipação, validação e desenvolvimento.
-
-Tecnologia só gera impacto quando aproxima pessoas de oportunidades.
-
-Gostou?
-
-Vamos nos conectar. 💛
+                Sou formada em Administração, possuo formação técnica Full Stack pelo SENAI e atualmente concluo o bootcamp de Cloud Computing da Generation Brasil, com foco na certificação AWS Certified Cloud Practitioner. Acredito no aprendizado contínuo e no uso estratégico das novas tecnologias para gerar valor, eficiência, qualidade e melhor custo-benefício para pessoas e organizações.
               </p>
+              <p className="founder-text">
+                Nesta versão do 99 Nexus, atuei na definição da visão de produto, experiência do usuário, estrutura funcional e evolução do MVP, utilizando metodologias ágeis e ferramentas de Inteligência Artificial, incluindo o Microsoft Copilot, para acelerar prototipação, validação e desenvolvimento.
+              </p>
+              <p className="founder-quote">
+                Tecnologia só gera impacto quando aproxima pessoas de oportunidades.
+              </p>
+              <p className="founder-text">Gostou? Vamos nos conectar. 💛</p>
 
               <div className="founder-buttons">
                 <a href="https://www.linkedin.com/in/ingridpereira1/" target="_blank" rel="noreferrer" className="btn btn-dark">
